@@ -1,16 +1,13 @@
-use super::schema::posts;
+use super::schema::users;
 
 #[derive(Queryable)]
-pub struct Post {
+pub struct User {
     pub id: i32,
-    pub title: String,
-    pub body: String,
-    pub published: bool,
+    pub name: String,
 }
 
 #[derive(Insertable)]
-#[table_name="posts"]
-pub struct NewPost<'a> {
-    pub title: &'a str,
-    pub body: &'a str,
+#[table_name="users"]
+pub struct NewUser<'a> {
+    pub name: &'a str,
 }

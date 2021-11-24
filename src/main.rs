@@ -2,35 +2,42 @@
 
 #[macro_use] extern crate rocket;
 
-use backend::schema::posts::dsl::*;
 use backend::*;
 use backend::models::*;
 use diesel::prelude::*;
 
 
-#[get("/<name>/<age>")]
-fn hello(name: String, age: u8) -> String {
-    format!("Hello, {} year old named {}!", age, name)
+#[post("/users/create/<name>")]
+fn create_new_user(name: String) -> String {
+    use schema::users;
+    let conn = establish_connection();
+
+    let new_user = NewUser { name: &name };
+
+    let user = new_user.insert_into(users::table)
+        .get_result::<User>(&conn)
+        .expect("Error saving new user");
+
+    format!("User: 'name: {}, id: {}' created.", user.name, user.id)
+}
+
+#[get("/users")]
+fn get_users() -> String {
+    let conn = establish_connection();
+
+    use schema::users::dsl::*;
+    let results = users.load::<User>(&conn)
+        .expect("Error loading users.")
+        .into_iter()
+        .map(|x| format!("Name: {}, ID: {}", x.name, x.id))
+        .collect::<Vec<_>>();
+
+    results.join("\n")
 }
 
 
 fn main() {
-    //rocket::ignite().mount("/hello", routes![hello]).launch();
-    let connection = establish_connection();
-
-    let post = create_post(&connection, "hello diesel", "This is my first diesel post");
-    println!("\nSaved draft {} with id {}", post.title, post.id);
-
-    let results = posts
-        .limit(5)
-        .load::<Post>(&connection)
-        .expect("Error handling posts");    
-
-    println!("Displaying {} posts", results.len());
-    for post in results {
-        println!("{}:{}", post.title, post.id);
-        println!("{}", post.body);
-        println!("==================================")
-    }
-
+    rocket::ignite()
+        .mount("/", routes![get_users, create_new_user ])
+        .launch();
 }
