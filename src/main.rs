@@ -24,15 +24,14 @@ fn create_new_user(name: String) -> String {
 #[get("/users")]
 fn get_users() -> String {
     let conn = establish_connection();
-
     use schema::users::dsl::*;
-    let results = users.load::<User>(&conn)
-        .expect("Error loading users.")
-        .into_iter()
-        .map(|x| format!("Name: {}, ID: {}", x.name, x.id))
-        .collect::<Vec<_>>();
-
-    results.join("\n")
+    users.load::<User>(&conn)
+        .map(|result| {
+            result.into_iter()
+            .map(|x| format!("Name: {}, ID: {}", x.name, x.id))
+            .collect()
+        })
+        .unwrap_or("Error loading users.".to_string())
 }
 
 
