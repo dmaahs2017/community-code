@@ -4,6 +4,7 @@ version = "0.1.0"
 edition = "2018"
 
 [dependencies]
+argon2 = "0.3.1"
 diesel = {version = "1.4.8", features = ["postgres"] }
 dotenv = "0.15.0"
 rocket = "0.4.10"

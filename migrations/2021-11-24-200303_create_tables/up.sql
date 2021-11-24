@@ -1,7 +1,8 @@
 -- Your SQL goes here
 create table users (
     id SERIAL PRIMARY KEY,
-    name VARCHAR not null unique
+    name VARCHAR not null unique,
+    hashed_password VARCHAR not null
 );
 
 create table challenges (

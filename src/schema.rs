@@ -27,6 +27,7 @@ table! {
     users (id) {
         id -> Int4,
         name -> Varchar,
+        hashed_password -> Varchar,
     }
 }
 
