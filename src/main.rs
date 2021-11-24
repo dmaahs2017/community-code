@@ -14,11 +14,11 @@ fn create_new_user(name: String) -> String {
 
     let new_user = NewUser { name: &name };
 
-    let user = new_user.insert_into(users::table)
+    new_user.insert_into(users::table)
         .get_result::<User>(&conn)
-        .expect("Error saving new user");
+        .map(|x| format!("User: 'name: {}, id: {}' created.", x.name, x.id))
+        .unwrap_or("Error saving new user.".to_string())
 
-    format!("User: 'name: {}, id: {}' created.", user.name, user.id)
 }
 
 #[get("/users")]
@@ -38,6 +38,6 @@ fn get_users() -> String {
 
 fn main() {
     rocket::ignite()
-        .mount("/", routes![get_users, create_new_user ])
+        .mount("/", routes![get_users, create_new_user])
         .launch();
 }
