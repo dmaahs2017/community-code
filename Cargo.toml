@@ -7,4 +7,6 @@ edition = "2018"
 argon2 = "0.3.1"
 diesel = {version = "1.4.8", features = ["postgres"] }
 dotenv = "0.15.0"
+reqwest = { version = "0.11", features = ["blocking", "json"] }
 rocket = "0.4.10"
+serde = { version = "1.0.130", features = ["derive"] }

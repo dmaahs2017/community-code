@@ -35,9 +35,4 @@ joinable!(challenges -> users (owner_id));
 joinable!(submissions -> challenges (challenge_id));
 joinable!(submissions -> users (user_id));
 
-allow_tables_to_appear_in_same_query!(
-    challenges,
-    files,
-    submissions,
-    users,
-);
+allow_tables_to_appear_in_same_query!(challenges, files, submissions, users,);
